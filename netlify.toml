@@ -1,0 +1,4 @@
+# netlify: connect repo or drag folder, publish = root, no build cmd
+
+[build]
+  publish = "."

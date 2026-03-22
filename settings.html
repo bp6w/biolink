@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Configure your terminal bio link" />
+    <meta name="theme-color" content="#0d0d0d" />
+    <title>Bio link — settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="settings-page">
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="bg-noise" aria-hidden="true"></div>
+
+    <main class="settings-layout">
+      <header class="settings-header">
+        <h1>Site settings</h1>
+        <p>
+          Fill this in, then download <code>config.js</code> and replace the one in your repo. Commit, push, done.
+          <br />
+          <a href="index.html">back</a>
+        </p>
+      </header>
+
+      <form id="settings-form" class="settings-form" autocomplete="off">
+        <section class="settings-panel">
+          <h2>Entry screen</h2>
+          <div class="settings-grid cols-2">
+            <div class="settings-field">
+              <label for="entry-title">Title</label>
+              <input type="text" id="entry-title" name="entry-title" />
+            </div>
+            <div class="settings-field">
+              <label for="entry-subtitle">Subtitle</label>
+              <input type="text" id="entry-subtitle" name="entry-subtitle" />
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <h2>Asset folder</h2>
+          <div class="settings-field">
+            <label for="asset-prefix">Prefix for picked files</label>
+            <input type="text" id="asset-prefix" name="asset-prefix" spellcheck="false" />
+            <span class="settings-field-hint"
+              >File picker only knows the file name, so we glue it after this path. Default is <code>assets/</code> —
+              put the real file there before you deploy.</span
+            >
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <h2>Avatar</h2>
+          <div class="settings-grid cols-2">
+            <div class="settings-field">
+              <label for="avatar-src">Image path (relative URL)</label>
+              <div class="settings-file-row">
+                <input type="text" id="avatar-src" name="avatar-src" spellcheck="false" />
+                <input type="file" id="avatar-file" accept="image/*" hidden aria-hidden="true" />
+                <button type="button" class="settings-btn" id="btn-pick-avatar">Choose image…</button>
+              </div>
+              <span class="settings-picked" id="avatar-picked" aria-live="polite"></span>
+              <span class="settings-field-hint">Or type the path yourself. (Browsers won’t expose a full path from disk.)</span>
+            </div>
+            <div class="settings-field">
+              <label for="avatar-alt">Alt text</label>
+              <input type="text" id="avatar-alt" name="avatar-alt" />
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <h2>Music</h2>
+          <div class="settings-grid cols-2">
+            <div class="settings-field">
+              <label for="music-src">Audio path (relative URL)</label>
+              <div class="settings-file-row">
+                <input type="text" id="music-src" name="music-src" spellcheck="false" />
+                <input type="file" id="music-file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,audio/mpeg" hidden aria-hidden="true" />
+                <button type="button" class="settings-btn" id="btn-pick-music">Choose audio…</button>
+              </div>
+              <span class="settings-picked" id="music-picked" aria-live="polite"></span>
+              <span class="settings-field-hint">Leave empty to hide the music player.</span>
+            </div>
+            <div class="settings-field">
+              <label for="music-label">Track label (shown in player)</label>
+              <input type="text" id="music-label" name="music-label" />
+            </div>
+            <div class="settings-field">
+              <label for="music-volume">Volume (0 – 1)</label>
+              <input type="number" id="music-volume" name="music-volume" min="0" max="1" step="0.05" />
+            </div>
+            <div class="settings-field" style="justify-content: flex-end">
+              <label class="settings-check">
+                <input type="checkbox" id="music-autoplay" name="music-autoplay" />
+                Autoplay after entering
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <h2>Terminal</h2>
+          <div class="settings-grid cols-2">
+            <div class="settings-field">
+              <label for="user">User (prompt)</label>
+              <input type="text" id="user" name="user" />
+            </div>
+            <div class="settings-field">
+              <label for="host">Host (prompt)</label>
+              <input type="text" id="host" name="host" />
+            </div>
+            <div class="settings-field">
+              <label for="site-name">Site name / tab title</label>
+              <input type="text" id="site-name" name="site-name" />
+            </div>
+          </div>
+          <div class="settings-field" style="margin-top: 1rem">
+            <label for="welcome">Welcome line</label>
+            <textarea id="welcome" name="welcome"></textarea>
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <h2>Socials</h2>
+          <div id="social-rows" class="settings-rows"></div>
+          <div class="settings-btn-row">
+            <button type="button" class="settings-btn" id="btn-add-social">+ Add social</button>
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <h2>Projects</h2>
+          <div id="project-rows" class="settings-rows"></div>
+          <div class="settings-btn-row">
+            <button type="button" class="settings-btn" id="btn-add-project">+ Add project</button>
+          </div>
+        </section>
+      </form>
+
+      <div class="settings-actions">
+        <button type="button" class="settings-btn primary" id="btn-download">Download config.js</button>
+        <button type="button" class="settings-btn" id="btn-copy">Copy file to clipboard</button>
+      </div>
+      <p id="settings-status" class="settings-status" role="status" aria-live="polite"></p>
+      <p class="settings-footnote">
+        There’s no backend — this page can’t save to your disk by itself. Swap in the downloaded <code>config.js</code> locally, commit, push.
+      </p>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>
