@@ -93,6 +93,70 @@
       .replace(/</g, "&lt;");
   }
 
+  let draggedRow = null;
+
+  function makeDraggable(row) {
+    row.setAttribute("draggable", "true");
+    row.style.cursor = "grab";
+    
+    row.addEventListener("dragstart", (e) => {
+      draggedRow = row;
+      row.style.opacity = "0.4";
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", "row");
+    });
+    
+    row.addEventListener("dragend", () => {
+      draggedRow = null;
+      row.style.opacity = "1";
+      document.querySelectorAll(".settings-row").forEach(r => {
+        r.style.boxShadow = "none";
+        r.style.transform = "none";
+      });
+    });
+    
+    row.addEventListener("dragover", (e) => {
+      e.preventDefault(); 
+      if (!draggedRow || draggedRow === row || draggedRow.parentNode !== row.parentNode) return;
+      
+      const bounding = row.getBoundingClientRect();
+      const offset = e.clientY - bounding.top;
+      if (offset > bounding.height / 2) {
+        row.style.boxShadow = "0 3px 0 var(--text-accent)";
+      } else {
+        row.style.boxShadow = "0 -3px 0 var(--text-accent)";
+      }
+      row.style.transform = "scale(0.99)";
+    });
+
+    row.addEventListener("dragleave", () => {
+      if (draggedRow === row) return;
+      row.style.boxShadow = "none";
+      row.style.transform = "none";
+    });
+    
+    row.addEventListener("drop", (e) => {
+      e.preventDefault();
+      if (!draggedRow || draggedRow === row || draggedRow.parentNode !== row.parentNode) return;
+      
+      row.style.boxShadow = "none";
+      row.style.transform = "none";
+      
+      const bounding = row.getBoundingClientRect();
+      const offset = e.clientY - bounding.top;
+      
+      if (offset > bounding.height / 2) {
+        if (row.nextSibling) {
+          row.parentNode.insertBefore(draggedRow, row.nextSibling);
+        } else {
+          row.parentNode.appendChild(draggedRow);
+        }
+      } else {
+        row.parentNode.insertBefore(draggedRow, row);
+      }
+    });
+  }
+
   function addSocialRow(data) {
     const row = document.createElement("div");
     row.className = "settings-row social-row";
@@ -108,6 +172,7 @@
       <button type="button" class="settings-btn danger social-remove">remove</button>
     `;
     row.querySelector(".social-remove").addEventListener("click", () => row.remove());
+    makeDraggable(row);
     socialWrap.appendChild(row);
   }
 
@@ -130,6 +195,7 @@
       <button type="button" class="settings-btn danger proj-remove">remove</button>
     `;
     row.querySelector(".proj-remove").addEventListener("click", () => row.remove());
+    makeDraggable(row);
     projectWrap.appendChild(row);
   }
 
